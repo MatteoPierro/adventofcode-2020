@@ -6,11 +6,11 @@ module ReportRepair
       File.open(path).each_line.map(&:chop)
     end
 
-    def fix(expense_report = nil)
+    def fix(expense_report: nil, size: 2)
       expense_report ||= file_lines('./lib/expense_report.txt')
       expense_report
         .map(&:to_i)
-        .combination(2)
+        .combination(size)
         .find { |combination| combination.sum == 2020 }
         .reduce(:*)
     end
