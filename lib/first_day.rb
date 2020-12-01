@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 module FirstDay
-  def self.foo
-    'bla'
+
+  class << self
+    def file_lines(path)
+      File.open(path).each_line.map(&:chop)
+    end
   end
 end
