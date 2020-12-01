@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
+require_relative 'file_helper'
+
 module ReportRepair
   class << self
-    def file_lines(path)
-      File.open(path).each_line.map(&:chop)
-    end
-
     def fix(expense_report: nil, size: 2)
-      expense_report ||= file_lines('./lib/expense_report.txt')
+      expense_report ||= File.readlines('./lib/expense_report.txt')
       expense_report
         .map(&:to_i)
         .combination(size)
