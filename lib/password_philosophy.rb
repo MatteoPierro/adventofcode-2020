@@ -11,9 +11,7 @@ class PasswordPhilosophy
   end
 
   EXACTLY_ONE_POLICY = lambda do |first_position, second_position, letter, word|
-    return false if word[first_position - 1] == letter && word[second_position - 1] == letter
-
-    word[first_position - 1] == letter || word[second_position - 1] == letter
+    (word[first_position - 1] == letter) ^ (word[second_position - 1] == letter)
   end
 
   attr_reader :policy
