@@ -15,3 +15,4 @@ Check code style
 ## Solutions
 
 - [Day 1: Report Repair](./lib/report_repair.rb)
+- [Day 2: Password Philosophy](./lib/password_philosophy.rb)
