@@ -22,13 +22,15 @@ class PasswordPhilosophy
     @policy = policy || COUNT_POLICY
   end
 
-  def count_compliant(password_with_constraints = nil)
-    password_with_constraints ||= File.readlines('./lib/password_philosophy.txt')
-    password_with_constraints.select(&method(:compliant?)).count
+  def count_compliant(passwords_with_constraints = nil)
+    passwords_with_constraints ||= File.readlines('./lib/password_philosophy.txt')
+    passwords_with_constraints.select(&method(:compliant?)).count
   end
 
+  PASSWORD_WITH_CONSTRAINTS_PATTERN = /^(?<first>\d+)-(?<second>\d+)\s(?<letter>\w):\s(?<word>\w+)$/.freeze
+
   def compliant?(password_with_constraints)
-    match = password_with_constraints.match(/^(?<first>\d+)-(?<second>\d+)\s(?<letter>\w):\s(?<word>\w+)$/)
+    match = password_with_constraints.match(PASSWORD_WITH_CONSTRAINTS_PATTERN)
     first = match[:first].to_i
     second = match[:second].to_i
     letter = match[:letter]
