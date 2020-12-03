@@ -16,3 +16,4 @@ Check code style
 
 - [Day 1: Report Repair](./lib/report_repair.rb)
 - [Day 2: Password Philosophy](./lib/password_philosophy.rb)
+- [Day 3: Toboggan Trajectory](./lib/toboggan_trajectory.rb)
