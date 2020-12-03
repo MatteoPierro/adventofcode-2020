@@ -2,7 +2,7 @@
 
 require_relative 'file_helper'
 
-# Solution for https://adventofcode.com/2020/day/1
+# Solution for https://adventofcode.com/2020/day/3
 
 class TobogganTrajectory
   attr_reader :area
@@ -21,11 +21,13 @@ class TobogganTrajectory
     ].map { |slope| count_trees(**slope) }.reduce(:*)
   end
 
+  TREE = '#'
+
   def count_trees(right: 3, down: 1)
     (0...area.length)
       .step(down)
       .map { |index| area[index] }
       .map.with_index { |row, index| row[(index * right) % row.length] }
-      .count('#')
+      .count(TREE)
   end
 end
