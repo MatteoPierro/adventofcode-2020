@@ -38,4 +38,9 @@ class PassportProcessingTest < Minitest::Test
     invalid_passport = 'byr:1919 ecl:gry pid:860033327 eyr:2020 hcl:#fffffd iyr:2017 cid:147 hgt:183cm'
     assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
   end
+
+  def test_passport_with_invalid_issue_year
+    invalid_passport = 'iyr:2099 byr:1921 ecl:gry pid:860033327 eyr:2020 hcl:#fffffd cid:147 hgt:183cm'
+    assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
+  end
 end

@@ -13,10 +13,15 @@ module PassportProcessing
     return false unless SIMPLE_VALIDATOR.call(raw_passport)
 
     passport = raw_passport.scan(/(\w+):(\S+)/).each_with_object({}) do |field, p|
-      p[field.first.to_s] = field.last
+      p[field.first.to_sym] = field.last
     end
 
-    return passport[:byr].to_i >= 1920 && passport[:byr].to_i <= 2002
+    return validate_range(passport[:byr], 1920, 2002) &&
+           validate_range(passport[:iyr], 2010, 2020)
+  end
+
+  def self.validate_range(value, lower_value, higher_value)
+    (lower_value..higher_value).include? value
   end
 
   class << self
