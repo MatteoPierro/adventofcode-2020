@@ -24,4 +24,9 @@ class PassportProcessingTest < Minitest::Test
     passports = PassportProcessing.parse(passport_filepath)
     assert_equal 4, passports.count
   end
+
+  def test_count_valid_passport
+    passport_filepath = './test/passport_file.txt'
+    assert_equal 2, PassportProcessing.count_valid_passports(passport_filepath)
+  end
 end
