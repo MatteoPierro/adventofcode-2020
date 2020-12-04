@@ -48,4 +48,14 @@ class PassportProcessingTest < Minitest::Test
     invalid_passport = 'eyr:2010 iyr:2019 byr:1921 ecl:gry pid:860033327 hcl:#fffffd cid:147 hgt:183cm'
     assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
   end
+
+  def test_passport_with_invalid_height_in_cm
+    invalid_passport = 'hgt:200cm eyr:2020 iyr:2019 byr:1921 ecl:gry pid:860033327 hcl:#fffffd cid:147'
+    assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
+  end
+
+  def test_passport_with_invalid_height_in_in
+    invalid_passport = 'hgt:50in eyr:2020 iyr:2019 byr:1921 ecl:gry pid:860033327 hcl:#fffffd cid:147'
+    assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
+  end
 end

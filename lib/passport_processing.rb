@@ -18,7 +18,20 @@ module PassportProcessing
 
     return validate_range(passport[:byr], 1920, 2002) &&
            validate_range(passport[:iyr], 2010, 2020) &&
-           validate_range(passport[:eyr], 2020, 2030)
+           validate_range(passport[:eyr], 2020, 2030) &&
+           validate_height(passport[:hgt])
+  end
+
+  def self.validate_height(raw_height)
+    height_parts = raw_height.scan(/(\d+)(cm|in)/).first
+    return false if height_parts.nil?
+
+    (value, scale) = height_parts
+    if scale == 'cm'
+      validate_range(value, 150, 193)
+    else
+      validate_range(value, 59, 76)
+    end
   end
 
   def self.validate_range(value, lower_value, higher_value)
