@@ -27,7 +27,7 @@ class PassportProcessingTest < Minitest::Test
 
   def test_count_valid_passport
     passport_filepath = './test/passport_file.txt'
-    assert_equal 2, PassportProcessing.count_valid_passports(passport_filepath)
+    assert_equal 2, PassportProcessing.count_valid_passports(passport_filepath: passport_filepath)
   end
 
   def test_first_puzzle_solution
@@ -72,5 +72,34 @@ class PassportProcessingTest < Minitest::Test
   def test_passport_with_invalid_passport_id
     invalid_passport = 'pid:86003332 ecl:blu hcl:#123abc hgt:61in eyr:2020 iyr:2019 byr:1921 cid:147'
     assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
+  end
+
+  def test_second_puzzle_solution
+    assert_equal 188, PassportProcessing.count_valid_passports(validator: PassportProcessing::COMPLETE_VALIDATOR)
+  end
+
+  def test_count_valid_passport_complete_validator
+    passport_filepath = './test/passport_file.txt'
+    assert_equal 2, PassportProcessing.count_valid_passports(passport_filepath: passport_filepath, validator: PassportProcessing::COMPLETE_VALIDATOR)
+  end
+
+  def test_count_all_invalid_passport_complete_validator
+    passport_filepath = './test/invalid_passport_file.txt'
+    assert_equal 0, PassportProcessing.count_valid_passports(passport_filepath: passport_filepath, validator: PassportProcessing::COMPLETE_VALIDATOR)
+  end
+
+  def test_count_all_valid_passport_complete_validator
+    passport_filepath = './test/valid_passport_file.txt'
+    assert_equal 4, PassportProcessing.count_valid_passports(passport_filepath: passport_filepath, validator: PassportProcessing::COMPLETE_VALIDATOR)
+  end
+
+  def test_height_without_scale
+    assert_equal false, PassportProcessing.validate_height('66')
+  end
+
+  def test_hair_color
+    assert_equal false, PassportProcessing.validate_hair_color('#1')
+    assert PassportProcessing.validate_hair_color('#123456')
+    assert_equal false, PassportProcessing.validate_hair_color('#1234567')
   end
 end

@@ -22,11 +22,11 @@ module PassportProcessing
            validate_height(passport[:hgt]) &&
            validate_hair_color(passport[:hcl]) &&
            validate_eye_color(passport[:ecl]) &&
-           validate_passport_id(passport[:ecl])
+           validate_passport_id(passport[:pid])
   end
 
   def self.validate_passport_id(passport_id)
-    passport_id.match?(/\d{9}/)
+    passport_id.match?(/^\d{9}$/)
   end
 
   def self.validate_eye_color(eye_color)
@@ -34,7 +34,7 @@ module PassportProcessing
   end
 
   def self.validate_hair_color(raw_hair_color)
-    raw_hair_color.match?(/#[0-9a-f]{6}/)
+    raw_hair_color.match?(/^#[0-9a-f]{6}$/)
   end
 
   def self.validate_height(raw_height)
@@ -54,7 +54,7 @@ module PassportProcessing
   end
 
   class << self
-    def count_valid_passports(passport_filepath = nil, validator = SIMPLE_VALIDATOR)
+    def count_valid_passports(passport_filepath: nil, validator: SIMPLE_VALIDATOR)
       passport_filepath ||= './lib/passport_processing.txt'
       parse(passport_filepath)
         .filter { |passport| validator.call(passport) }
