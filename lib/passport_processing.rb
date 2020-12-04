@@ -17,15 +17,20 @@ module PassportProcessing
     end
 
     return validate_range(passport[:byr], 1920, 2002) &&
-        validate_range(passport[:iyr], 2010, 2020) &&
-        validate_range(passport[:eyr], 2020, 2030) &&
-        validate_height(passport[:hgt]) &&
-        validate_hair_color(passport[:hcl]) &&
-        validate_eye_color(passport[:ecl])
+           validate_range(passport[:iyr], 2010, 2020) &&
+           validate_range(passport[:eyr], 2020, 2030) &&
+           validate_height(passport[:hgt]) &&
+           validate_hair_color(passport[:hcl]) &&
+           validate_eye_color(passport[:ecl]) &&
+           validate_passport_id(passport[:ecl])
+  end
+
+  def self.validate_passport_id(passport_id)
+    passport_id.match?(/\d{9}/)
   end
 
   def self.validate_eye_color(eye_color)
-    %w(amb blu brn gry grn hzl oth).include? eye_color
+    %w[amb blu brn gry grn hzl oth].include? eye_color
   end
 
   def self.validate_hair_color(raw_hair_color)
@@ -52,8 +57,8 @@ module PassportProcessing
     def count_valid_passports(passport_filepath = nil, validator = SIMPLE_VALIDATOR)
       passport_filepath ||= './lib/passport_processing.txt'
       parse(passport_filepath)
-          .filter { |passport| validator.call(passport) }
-          .count
+        .filter { |passport| validator.call(passport) }
+        .count
     end
 
     def parse(filepath)
