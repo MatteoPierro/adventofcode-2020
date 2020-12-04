@@ -6,17 +6,17 @@ require_relative '../lib/passport_processing'
 class PassportProcessingTest < Minitest::Test
   def test_valid_passport
     valid_passport = 'ecl:gry pid:860033327 eyr:2020 hcl:#fffffd byr:1937 iyr:2017 cid:147 hgt:183cm'
-    assert PassportProcessing.valid?(valid_passport)
+    assert PassportProcessing::SIMPLE_VALIDATOR.call(valid_passport)
   end
 
   def test_invalid_passport
     invalid_passport = 'pid:860033327 eyr:2020 hcl:#fffffd byr:1937 iyr:2017 cid:147 hgt:183cm'
-    assert_equal PassportProcessing.valid?(invalid_passport), false
+    assert_equal PassportProcessing::SIMPLE_VALIDATOR.call(invalid_passport), false
   end
 
   def test_still_valid_passport_with_missing_cid
     valid_passport = 'ecl:gry pid:860033327 eyr:2020 hcl:#fffffd byr:1937 iyr:2017 hgt:183cm'
-    assert PassportProcessing.valid?(valid_passport)
+    assert PassportProcessing::SIMPLE_VALIDATOR.call(valid_passport)
   end
 
   def test_can_parse_passport_file
@@ -32,5 +32,10 @@ class PassportProcessingTest < Minitest::Test
 
   def test_first_puzzle_solution
     assert_equal 239, PassportProcessing.count_valid_passports
+  end
+
+  def test_passport_with_invalid_birth_year
+    invalid_passport = 'byr:1919 ecl:gry pid:860033327 eyr:2020 hcl:#fffffd iyr:2017 cid:147 hgt:183cm'
+    assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
   end
 end
