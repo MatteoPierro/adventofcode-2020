@@ -1,8 +1,10 @@
-require_relative "./file_helper"
+# frozen_string_literal: true
+
+require_relative './file_helper'
 
 module PassportProcessing
   class << self
-    MANDATORY_FIELDS = %w(byr iyr eyr hgt hcl ecl pid)
+    MANDATORY_FIELDS = %w[byr iyr eyr hgt hcl ecl pid].freeze
 
     def valid?(passport)
       (MANDATORY_FIELDS - passport.scan(/(\w+):\S+/).flatten).empty?
@@ -10,10 +12,10 @@ module PassportProcessing
 
     def parse(filepath)
       File.readlines(filepath)
-      .chunk { |e| e.empty?  }
-      .map { |k,v| v.join(" ")}
-      .reject { |e| e.empty? }
-      .to_a
+          .chunk(&:empty?)
+          .map { |_, v| v.join(' ') }
+          .reject(&:empty?)
+          .to_a
     end
   end
 end

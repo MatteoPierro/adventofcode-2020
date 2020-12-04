@@ -4,7 +4,6 @@ require 'minitest/autorun'
 require_relative '../lib/passport_processing'
 
 class PassportProcessingTest < Minitest::Test
-
   def test_valid_passport
     valid_passport = 'ecl:gry pid:860033327 eyr:2020 hcl:#fffffd byr:1937 iyr:2017 cid:147 hgt:183cm'
     assert PassportProcessing.valid?(valid_passport)
@@ -21,10 +20,8 @@ class PassportProcessingTest < Minitest::Test
   end
 
   def test_can_parse_passport_file
-    passport_filepath = "./test/passport_file.txt"
+    passport_filepath = './test/passport_file.txt'
     passports = PassportProcessing.parse(passport_filepath)
-
     assert_equal 4, passports.count
   end
-
 end
