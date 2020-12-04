@@ -19,7 +19,12 @@ module PassportProcessing
     return validate_range(passport[:byr], 1920, 2002) &&
            validate_range(passport[:iyr], 2010, 2020) &&
            validate_range(passport[:eyr], 2020, 2030) &&
-           validate_height(passport[:hgt])
+           validate_height(passport[:hgt]) &&
+           validate_hair_color(passport[:hcl])
+  end
+
+  def self.validate_hair_color(raw_hair_color)
+    raw_hair_color.match?(/#[0-9a-f]{6}/)
   end
 
   def self.validate_height(raw_height)
