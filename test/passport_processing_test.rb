@@ -29,4 +29,8 @@ class PassportProcessingTest < Minitest::Test
     passport_filepath = './test/passport_file.txt'
     assert_equal 2, PassportProcessing.count_valid_passports(passport_filepath)
   end
+
+  def test_first_puzzle_solution
+    assert_equal 239, PassportProcessing.count_valid_passports
+  end
 end

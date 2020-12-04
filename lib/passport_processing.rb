@@ -6,7 +6,8 @@ module PassportProcessing
   class << self
     MANDATORY_FIELDS = %w[byr iyr eyr hgt hcl ecl pid].freeze
 
-    def count_valid_passports(passport_filepath)
+    def count_valid_passports(passport_filepath = nil)
+      passport_filepath ||= './lib/passport_processing.txt'
       parse(passport_filepath).filter(&method(:valid?)).count
     end
 
