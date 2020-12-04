@@ -63,4 +63,10 @@ class PassportProcessingTest < Minitest::Test
     invalid_passport = 'hcl:#123abz hgt:61in eyr:2020 iyr:2019 byr:1921 ecl:gry pid:860033327 cid:147'
     assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
   end
+
+  def test_passport_with_invalid_eye_color
+    invalid_passport = 'ecl:caz hcl:#123abc hgt:61in eyr:2020 iyr:2019 byr:1921 pid:860033327 cid:147'
+    assert_equal false, PassportProcessing::COMPLETE_VALIDATOR.call(invalid_passport)
+  end
+
 end
