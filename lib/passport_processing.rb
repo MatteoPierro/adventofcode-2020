@@ -17,11 +17,12 @@ module PassportProcessing
     end
 
     return validate_range(passport[:byr], 1920, 2002) &&
-           validate_range(passport[:iyr], 2010, 2020)
+           validate_range(passport[:iyr], 2010, 2020) &&
+           validate_range(passport[:eyr], 2020, 2030)
   end
 
   def self.validate_range(value, lower_value, higher_value)
-    (lower_value..higher_value).include? value
+    (lower_value..higher_value).include? value.to_i
   end
 
   class << self
