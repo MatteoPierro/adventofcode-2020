@@ -18,3 +18,4 @@ Check code style
 - [Day 2: Password Philosophy](./lib/password_philosophy.rb)
 - [Day 3: Toboggan Trajectory](./lib/toboggan_trajectory.rb)
 - [Day 4: Passport Processing](./lib/passport_processing.rb)
+- [Day 5: Binary Boarding](./lib/binary_boarding.rb)
