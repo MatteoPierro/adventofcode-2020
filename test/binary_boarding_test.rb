@@ -17,4 +17,8 @@ class BinaryBoardingTest < Minitest::Test
   def test_first_puzzle
     assert_equal(922, BinaryBoarding.max_seat_id)
   end
+
+  def test_second_puzzle
+    assert_equal(747, BinaryBoarding.find_my_seat_id)
+  end
 end
