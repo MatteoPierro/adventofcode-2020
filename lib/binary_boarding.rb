@@ -6,15 +6,18 @@ require_relative 'file_helper'
 
 module BinaryBoarding
   class << self
-    def find_my_seat_id
-      tickets ||= File.readlines('./lib/binary_boarding.txt')
-      seat_ids = tickets.map(&method(:seat_id))
+    def find_my_seat_id(tickets = nil)
+      seat_ids = find_seat_ids(tickets)
       ((seat_ids.min..seat_ids.max).to_a - seat_ids).first
     end
 
     def max_seat_id(tickets = nil)
+      find_seat_ids(tickets).max
+    end
+
+    def find_seat_ids(tickets = nil)
       tickets ||= File.readlines('./lib/binary_boarding.txt')
-      tickets.map(&method(:seat_id)).max
+      tickets.map(&method(:seat_id))
     end
 
     def seat_id(ticket)
