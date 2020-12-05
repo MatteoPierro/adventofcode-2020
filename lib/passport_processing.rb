@@ -2,6 +2,8 @@
 
 require_relative './file_helper'
 
+# Solution for https://adventofcode.com/2020/day/4
+
 module PassportProcessing
   class << self
     def count_valid_passports(passport_filepath: nil, validator: Validator::SIMPLE_VALIDATOR)
