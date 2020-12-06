@@ -4,7 +4,7 @@ require 'minitest/autorun'
 require_relative '../lib/custom_customs'
 
 class CustomCustomsTest < Minitest::Test
-  def test_group_positive_answers
+  def test_count_group_positive_answers
     group_answers = %w[ab ac]
     assert_equal 3, CustomCustoms.count_group_positive_answers(group_answers)
   end
@@ -16,5 +16,14 @@ class CustomCustomsTest < Minitest::Test
 
   def test_first_puzzle_solution
     assert_equal 6542, CustomCustoms.sum_groups_positive_answers
+  end
+
+  def test_count_group_shared_positive_answers
+    group_answers = %w[ab ac]
+    assert_equal 1, CustomCustoms.count_group_shared_positive_answers(group_answers)
+  end
+
+  def test_second_puzzle_solution
+    assert_equal 3299, CustomCustoms.sum_shared_positive_answers
   end
 end
