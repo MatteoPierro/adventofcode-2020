@@ -16,13 +16,13 @@ class HandyHaversacksTest < Minitest::Test
   end
 
   def test_first_example_find_shiny_gold_containers
-    contents_to_containers = HandyHaversacks.read_containers('./test/handy_haversacks_test.txt')
-    assert_equal 4, HandyHaversacks.find_shiny_gold_containers(contents_to_containers).count
+    bag = HandyHaversacks.read_bag('./test/handy_haversacks_test.txt')
+    assert_equal 4, HandyHaversacks.find_shiny_gold_containers(bag.contents_to_containers).count
   end
 
   def test_first_puzzle
-    contents_to_containers = HandyHaversacks.read_containers('./lib/handy_haversacks.txt')
-    assert_equal 226, HandyHaversacks.find_shiny_gold_containers(contents_to_containers).count
+    bag = HandyHaversacks.read_bag('./lib/handy_haversacks.txt')
+    assert_equal 226, HandyHaversacks.find_shiny_gold_containers(bag.contents_to_containers).count
   end
 
   def test_find_bags_in_shiny_gold
@@ -36,16 +36,17 @@ class HandyHaversacksTest < Minitest::Test
       'dark violet' => []
     }
 
-    assert_equal 126, HandyHaversacks.find_bags(containers_to_contents)
+    assert_equal 126, HandyHaversacks.count_bags_in_a_shiny_gold_bag(containers_to_contents)
   end
 
   def test_second_example_find_bags_in_shiny_gold
-    containers_to_contents = HandyHaversacks.read_content('./test/handy_haversacks_test.txt')
-    assert_equal 32, HandyHaversacks.find_bags(containers_to_contents)
+    bag = HandyHaversacks.read_bag('./test/handy_haversacks_test.txt')
+    puts bag.containers_to_contents
+    assert_equal 32, HandyHaversacks.count_bags_in_a_shiny_gold_bag(bag.containers_to_contents)
   end
 
   def test_second_puzzle
-    containers_to_contents = HandyHaversacks.read_content('./lib/handy_haversacks.txt')
-    assert_equal 9569, HandyHaversacks.find_bags(containers_to_contents)
+    bag = HandyHaversacks.read_bag('./lib/handy_haversacks.txt')
+    assert_equal 9569, HandyHaversacks.count_bags_in_a_shiny_gold_bag(bag.containers_to_contents)
   end
 end
