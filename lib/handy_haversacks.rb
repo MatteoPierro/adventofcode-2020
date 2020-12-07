@@ -6,8 +6,7 @@ require 'set'
 # Solution for https://adventofcode.com/2020/day/7
 
 class HandyHaversacks
-
-  def self.read(file_path)
+  def self.read_containers(file_path)
     File.readlines(file_path).each_with_object({}) do |line, rules|
       line_match = line.match(/^(?<bag>.+) bags contain (?<contents>.*)./)
       container = line_match[:bag]
@@ -22,8 +21,34 @@ class HandyHaversacks
     end
   end
 
+  def self.read_content(file_path)
+    File.readlines(file_path).each_with_object({}) do |line, rules|
+      line_match = line.match(/^(?<bag>.+) bags contain (?<contents>.*)./)
+      container = line_match[:bag]
+      contents = rules[container] || []
+      raw_contents = line_match[:contents].split(', ')
+      raw_contents.each do |raw_content|
+        content_match = raw_content.match(/^(?<size>\d+) (?<color>.*) bag/)
+        break if content_match.nil?
+
+        contents << { n: content_match[:size].to_i, bag: content_match[:color] }
+      end
+      rules[container] = contents
+    end
+  end
+
   def self.find_shiny_gold_containers(rules)
     new(rules).find_shiny_gold_containers
+  end
+
+  def self.find_bags_in_shiny_gold(rules)
+    contents = rules['shiny gold']
+    contents.map { |content| content[:n] + content[:n] * find_bags(rules, content[:bag]) }.sum
+  end
+
+  def self.find_bags(rules, bag)
+    contents = rules[bag]
+    contents.map { |content| content[:n] + content[:n] * find_bags(rules, content[:bag]) }.sum
   end
 
   attr_reader :rules
