@@ -20,3 +20,4 @@ Check code style
 - [Day 4: Passport Processing](./lib/passport_processing.rb)
 - [Day 5: Binary Boarding](./lib/binary_boarding.rb)
 - [Day 6: Custom Customs](./lib/custom_customs.rb)
+- [Day 7: Handy Haversacks](./lib/handy_haversacks.rb)
