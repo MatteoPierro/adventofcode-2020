@@ -17,12 +17,12 @@ class HandyHaversacksTest < Minitest::Test
 
   def test_first_example_find_shiny_gold_containers
     bag = HandyHaversacks.read_bag('./test/handy_haversacks_test.txt')
-    assert_equal 4, HandyHaversacks.find_shiny_gold_containers(bag.contents_to_containers).count
+    assert_equal 4, HandyHaversacks.count_shiny_gold_containers(bag.contents_to_containers)
   end
 
   def test_first_puzzle
     bag = HandyHaversacks.read_bag('./lib/handy_haversacks.txt')
-    assert_equal 226, HandyHaversacks.find_shiny_gold_containers(bag.contents_to_containers).count
+    assert_equal 226, HandyHaversacks.count_shiny_gold_containers(bag.contents_to_containers)
   end
 
   def test_find_bags_in_shiny_gold

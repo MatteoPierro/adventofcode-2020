@@ -18,6 +18,10 @@ class HandyHaversacks
       end
     end
 
+    def count_shiny_gold_containers(contents_to_containers)
+      find_shiny_gold_containers(contents_to_containers).count
+    end
+
     def find_shiny_gold_containers(
       contents_to_containers,
       visited = [],
