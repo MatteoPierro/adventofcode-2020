@@ -41,4 +41,28 @@ class HandheldHaltingTest < Minitest::Test
     instructions = HandheldHalting.parse_instructions(raw_instructions)
     assert_equal(1528, HandheldHalting.accumulator_before_loop(instructions))
   end
+
+  # rubocop:disable Metrics/MethodLength
+  def test_fix_program
+    instructions = [
+      HandheldHalting::Nop.new(0),
+      HandheldHalting::Acc.new(1),
+      HandheldHalting::Jmp.new(+4),
+      HandheldHalting::Acc.new(3),
+      HandheldHalting::Jmp.new(-3),
+      HandheldHalting::Acc.new(99),
+      HandheldHalting::Acc.new(1),
+      HandheldHalting::Jmp.new(-4),
+      HandheldHalting::Acc.new(+6)
+    ]
+
+    assert_equal(8, HandheldHalting.fix_program(instructions))
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def test_second_puzzle
+    raw_instructions = File.readlines('./lib/handheld_halting.txt')
+    instructions = HandheldHalting.parse_instructions(raw_instructions)
+    assert_equal(640, HandheldHalting.fix_program(instructions))
+  end
 end

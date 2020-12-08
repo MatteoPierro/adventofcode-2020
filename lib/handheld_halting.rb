@@ -6,10 +6,26 @@ require_relative 'file_helper'
 
 module HandheldHalting
   class << self
+    def fix_program(instructions)
+      instructions.each.with_index do |instruction, index|
+        next unless instruction.swappable?
+
+        instructions[index] = instruction.swap
+        state = execute(instructions)
+        return state.accumulator unless state.loop_detected?
+
+        instructions[index] = instruction
+      end
+    end
+
     def accumulator_before_loop(instructions)
+      execute(instructions).accumulator
+    end
+
+    def execute(instructions)
       state = MachineState.new
       Machine.new(state).execute(instructions)
-      state.accumulator
+      state
     end
 
     def parse_instructions(raw_instructions)
@@ -40,25 +56,39 @@ module HandheldHalting
       @state = state
     end
 
+    # rubocop:disable Metrics/MethodLength
     def execute(instructions)
       used_instructions = []
       instruction_index = 0
       loop do
         instruction = instructions[instruction_index]
-        break if used_instructions.include?(instruction)
+        if used_instructions.include?(instruction)
+          @state.loop_detected!
+          break
+        end
 
         used_instructions << instruction
         instruction_index += instruction.execute(@state)
-        break if instruction_index > instructions.length
+        break if instruction_index >= instructions.length
       end
     end
+    # rubocop:enable Metrics/MethodLength
   end
 
   class MachineState
-    attr_accessor :accumulator
+    attr_accessor :accumulator, :loop_detected
 
     def initialize
       @accumulator = 0
+      @loop_detected = false
+    end
+
+    def loop_detected!
+      @loop_detected = true
+    end
+
+    def loop_detected?
+      @loop_detected
     end
   end
 
@@ -79,10 +109,26 @@ module HandheldHalting
     def next_instruction
       1
     end
+
+    def swap
+      self
+    end
+
+    def swappable?
+      false
+    end
   end
 
   class Nop
     include Instruction
+
+    def swap
+      Jmp.new(value)
+    end
+
+    def swappable?
+      true
+    end
   end
 
   class Jmp
@@ -90,6 +136,14 @@ module HandheldHalting
 
     def next_instruction
       @value
+    end
+
+    def swap
+      Nop.new(value)
+    end
+
+    def swappable?
+      true
     end
   end
 
