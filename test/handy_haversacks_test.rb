@@ -41,7 +41,6 @@ class HandyHaversacksTest < Minitest::Test
 
   def test_second_example_find_bags_in_shiny_gold
     bag = HandyHaversacks.read_bag('./test/handy_haversacks_test.txt')
-    puts bag.containers_to_contents
     assert_equal 32, HandyHaversacks.count_bags_in_a_shiny_gold_bag(bag.containers_to_contents)
   end
 
