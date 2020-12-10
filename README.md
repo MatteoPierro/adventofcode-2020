@@ -23,3 +23,4 @@ Check code style
 - [Day 7: Handy Haversacks](./lib/handy_haversacks.rb)
 - [Day 8: Handheld Halting](./lib/handheld_halting.rb)
 - [Day 9: Encoding Error](./lib/encoding_error.rb)
+- [Day 10: Adapter Array](./lib/adapter_array.rb)
