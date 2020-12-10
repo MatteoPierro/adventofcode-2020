@@ -19,19 +19,10 @@ class AdapterArray
     differences.count(1) * differences.count(3)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def count_combinations(target = adapters.max + 3, current = 0, memo = {})
     return memo[current] if memo.include?(current)
-
-    if current == target
-      memo[current] = 1
-      return 1
-    end
-
-    unless adapters.include?(current)
-      memo[current] = 0
-      return 0
-    end
+    return 1 if current == target
+    return 0 unless adapters.include?(current)
 
     memo[current] = (1..3)
                     .each
@@ -39,5 +30,4 @@ class AdapterArray
                     .sum
     memo[current]
   end
-  # rubocop:enable Metrics/MethodLength
 end
