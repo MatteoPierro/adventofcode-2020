@@ -16,6 +16,10 @@ class AdapterArrayTest < Minitest::Test
 
   def test_find_combinations
     adapters = [16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4]
+    # puts adapters.sort
+    adapters << 0
+    adapters << adapters.max + 3
+    # puts adapters.sort
     assert_equal(8, AdapterArray.find_combinations(adapters))
   end
 

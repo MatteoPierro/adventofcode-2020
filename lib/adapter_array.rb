@@ -7,35 +7,33 @@ require_relative 'file_helper'
 module AdapterArray
   class << self
     def multiply_differences(adapters)
-      differences = find_differences(adapters)
+      adapters << 0
+      adapters << adapters.max + 3
+      find_differences_value = adapters.sort.each_cons(2).map { |a, b| b - a }
+      differences = find_differences_value
       differences.count(1) * differences.count(3)
     end
 
-    def find_combinations(adapters)
-      find_differences(adapters)
-        .chunk { |difference| difference != 1 }
-        .filter { |chunk| !chunk.first }
-        .map { |chunk| chunk.last.length + 1 } # +1 because you need to reach the next hop
-        .map { |sequence_length| find_sequence_combination(sequence_length) }
-        .reduce(:*)
+    # rubocop:disable Metrics/MethodLength
+    def find_combinations(adapters, target = adapters.max + 3, current = 0, memo = {})
+      return memo[current] if memo.include?(current)
+
+      if current == target
+        memo[current] = 1
+        return 1
+      end
+
+      unless adapters.include?(current)
+        memo[current] = 0
+        return 0
+      end
+
+      memo[current] = (1..3)
+                      .each
+                      .map { |inc| find_combinations(adapters, target, current + inc, memo) }
+                      .sum
+      memo[current]
     end
-
-    private
-
-    def find_sequence_combination(sequence_length, current = 1)
-      return 1 if current == sequence_length
-
-      return 0 if current > sequence_length
-
-      find_sequence_combination(sequence_length, current + 1) +
-        find_sequence_combination(sequence_length, current + 2) +
-        find_sequence_combination(sequence_length, current + 3)
-    end
-
-    def find_differences(adapters)
-      adapters << 0
-      adapters << adapters.max + 3
-      adapters.sort.each_cons(2).map { |a, b| b - a }
-    end
+    # rubocop:enable Metrics/MethodLength
   end
 end
