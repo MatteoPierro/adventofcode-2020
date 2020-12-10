@@ -5,6 +5,11 @@ require_relative 'file_helper'
 # Solution for https://adventofcode.com/2020/day/10
 
 class AdapterArray
+  def self.from_file(file_path)
+    adapters = File.readlines(file_path).map(&:to_i)
+    new(adapters)
+  end
+
   attr_reader :adapters
 
   def initialize(adapters)
