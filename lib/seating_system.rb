@@ -8,7 +8,9 @@ class SeatingSystem
   def self.count_stabilized_empty_seat(file_path,
                                        occupied_neighbours: 4,
                                        neighbours_finder: ADJACENT_NEIGHBOUR_FINDER)
-    seating_system = from_file(file_path, occupied_neighbours: occupied_neighbours, neighbours_finder: neighbours_finder)
+    seating_system = from_file(file_path,
+                               occupied_neighbours: occupied_neighbours,
+                               neighbours_finder: neighbours_finder)
     seating_system.stabilize
     seating_system.count_occupied_seats
   end
@@ -18,7 +20,7 @@ class SeatingSystem
                      neighbours_finder: ADJACENT_NEIGHBOUR_FINDER)
     initial_layout = File.readlines(file_path)
     new(initial_layout.map(&:chars),
-        occupied_neighbours:occupied_neighbours,
+        occupied_neighbours: occupied_neighbours,
         neighbours_finder: neighbours_finder)
   end
 
@@ -27,23 +29,24 @@ class SeatingSystem
   def initialize(
     layout,
     occupied_neighbours: 4,
-    neighbours_finder: ADJACENT_NEIGHBOUR_FINDER)
+    neighbours_finder: ADJACENT_NEIGHBOUR_FINDER
+  )
     @layout = layout
     @occupied_neighbours = occupied_neighbours
     @neighbours_finder = neighbours_finder
   end
 
   def count_occupied_seats
-    to_s.count('#')
+    layout.map { |row| row.count('#') }.sum
   end
 
   def stabilize
-    old_layout = to_s
+    old_layout = layout
     loop do
       tick
-      break if old_layout == to_s
+      break if old_layout == layout
 
-      old_layout = to_s
+      old_layout = layout
     end
   end
 
@@ -69,7 +72,7 @@ class SeatingSystem
     return value if value == '.'
 
     neighbours = neighbours_finder.call(layout, row, row_index, seat_index)
-                                          .filter { |seat| seat == '#' }
+                                  .filter { |seat| seat == '#' }
 
     return '#' if value == 'L' && neighbours.count.zero?
     return 'L' if value == '#' && neighbours.count >= occupied_neighbours
@@ -83,8 +86,7 @@ class SeatingSystem
     [1, -1], [1, 0], [1, 1]
   ].freeze
 
-  # rubocop:disable Metrics/AbcSize
-  ADJACENT_NEIGHBOUR_FINDER = -> (layout, row, row_index, seat_index) do
+  ADJACENT_NEIGHBOUR_FINDER = lambda do |layout, row, row_index, seat_index|
     invalid_position = lambda do |position|
       position.any?(&:negative?) ||
         position.first >= row.length ||
@@ -97,21 +99,21 @@ class SeatingSystem
       .map { |x, y| layout[y][x] }
   end
 
-  EXTENDED_NEIGHBOUR_FINDER = -> (layout, row, row_index, seat_index) do
-    find_neighbour = -> (layout, increment, row, row_index, seat_index) do
+  EXTENDED_NEIGHBOUR_FINDER = lambda do |layout, row, row_index, seat_index|
+    find_neighbour = lambda do |increment|
+      current_seat = seat_index
+      current_row = row_index
       loop do
-        seat_index += increment.first
-        row_index += increment.last
-        return '.' if seat_index < 0 || seat_index >= row.length
-        return '.' if row_index < 0 || row_index >= layout.length
+        current_seat += increment.first
+        current_row += increment.last
+        return '.' if current_seat.negative? || current_seat >= row.length
+        return '.' if current_row.negative? || current_row >= layout.length
 
-        current_position = layout[row_index][seat_index]
-        return current_position if current_position == '#' || current_position == 'L'
+        current_position = layout[current_row][current_seat]
+        return current_position if %w[# L].include?(current_position)
       end
     end
 
-    WINDOW
-      .map { |increment| find_neighbour.call(layout, increment, row, row_index, seat_index) }
+    WINDOW.map { |increment| find_neighbour.call(increment) }
   end
-  # rubocop:enable Metrics/AbcSize
 end
