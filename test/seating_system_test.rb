@@ -14,7 +14,7 @@ class SeatingSystemTest < Minitest::Test
   end
 
   def test_first_puzzle
-    # skip # Quite slow, enable it only when needed
+    skip # Quite slow, enable it only when needed
     assert_equal(2299, SeatingSystem.count_stabilized_empty_seat('./lib/seating_system.txt'))
   end
 
@@ -32,7 +32,7 @@ class SeatingSystemTest < Minitest::Test
   end
 
   def test_second_puzzle
-    # skip # Quite slow, enable it only when needed
+    skip # Quite slow, enable it only when needed
     assert_equal(2047, SeatingSystem.count_stabilized_empty_seat(
                          './lib/seating_system.txt',
                          occupied_neighbours: 5,
