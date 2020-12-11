@@ -30,6 +30,5 @@ class AdapterArray
                     .each
                     .map { |inc| count_combinations(target, current + inc, memo) }
                     .sum
-    memo[current]
   end
 end
