@@ -19,21 +19,21 @@ class RainRiskTest < Minitest::Test
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def test_commands
     ferry = RainRisk::Ferry.new
-    assert_equal(RainRisk::Position.new(0, 0), ferry.position)
+    assert_equal(RainRisk::Coordinates.new(0, 0), ferry.coordinates)
     assert_equal(RainRisk::Direction::EAST, ferry.orientation)
 
     ferry.execute('F10')
-    assert_equal(RainRisk::Position.new(10, 0), ferry.position)
+    assert_equal(RainRisk::Coordinates.new(10, 0), ferry.coordinates)
     assert_equal(RainRisk::Direction::EAST, ferry.orientation)
 
     ferry.execute('R90')
     ferry.execute('F5')
-    assert_equal(RainRisk::Position.new(10, -5), ferry.position)
+    assert_equal(RainRisk::Coordinates.new(10, -5), ferry.coordinates)
     assert_equal(RainRisk::Direction::SOUTH, ferry.orientation)
 
     ferry.execute('L270')
     ferry.execute('F3')
-    assert_equal(RainRisk::Position.new(7, -5), ferry.position)
+    assert_equal(RainRisk::Coordinates.new(7, -5), ferry.coordinates)
     assert_equal(RainRisk::Direction::WEST, ferry.orientation)
 
     commands = %w[F10 N3 F7 R90 F11]
@@ -51,24 +51,24 @@ class RainRiskTest < Minitest::Test
     ferry = RainRisk::WaypointFerry.new
 
     ferry.execute('F10')
-    assert_equal(RainRisk::Position.new(100, 10), ferry.position)
-    assert_equal(RainRisk::Position.new(10, 1), ferry.waypoint)
+    assert_equal(RainRisk::Coordinates.new(100, 10), ferry.coordinates)
+    assert_equal(RainRisk::Coordinates.new(10, 1), ferry.waypoint)
 
     ferry.execute('N3')
-    assert_equal(RainRisk::Position.new(100, 10), ferry.position)
-    assert_equal(RainRisk::Position.new(10, 4), ferry.waypoint)
+    assert_equal(RainRisk::Coordinates.new(100, 10), ferry.coordinates)
+    assert_equal(RainRisk::Coordinates.new(10, 4), ferry.waypoint)
 
     ferry.execute('F7')
-    assert_equal(RainRisk::Position.new(170, 38), ferry.position)
-    assert_equal(RainRisk::Position.new(10, 4), ferry.waypoint)
+    assert_equal(RainRisk::Coordinates.new(170, 38), ferry.coordinates)
+    assert_equal(RainRisk::Coordinates.new(10, 4), ferry.waypoint)
 
     ferry.execute('R90')
-    assert_equal(RainRisk::Position.new(170, 38), ferry.position)
-    assert_equal(RainRisk::Position.new(4, -10), ferry.waypoint)
+    assert_equal(RainRisk::Coordinates.new(170, 38), ferry.coordinates)
+    assert_equal(RainRisk::Coordinates.new(4, -10), ferry.waypoint)
 
     ferry.execute('F11')
-    assert_equal(RainRisk::Position.new(214, -72), ferry.position)
-    assert_equal(RainRisk::Position.new(4, -10), ferry.waypoint)
+    assert_equal(RainRisk::Coordinates.new(214, -72), ferry.coordinates)
+    assert_equal(RainRisk::Coordinates.new(4, -10), ferry.waypoint)
 
     commands = %w[F10 N3 F7 R90 F11]
     assert_equal(286, RainRisk.manhattan_distance(commands, ferry: RainRisk::WaypointFerry.new))
