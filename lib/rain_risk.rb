@@ -19,23 +19,34 @@ class RainRisk
       @coordinates = Coordinates.new(0, 0)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def execute(raw_command)
+      command = parse_command(raw_command)
+      execute_parsed_command(command)
+    end
+
+    private
+
+    def execute_parsed_command(command)
+      case command.direction
+      when 'F'
+        move_forward(command.value)
+      when 'R'
+        rotate(command.value)
+      when 'L'
+        rotate(-command.value)
+      else
+        move_to_direction(command.direction, command.value)
+      end
+    end
+
+    def parse_command(raw_command)
       command_match = COMMAND_PATTERN.match(raw_command)
       direction = command_match[:direction]
       value = command_match[:value].to_i
-      case direction
-      when 'F'
-        move_forward(value)
-      when 'R'
-        rotate(value)
-      when 'L'
-        rotate(-value)
-      else
-        move_to_direction(direction, value)
-      end
+      Command.new(direction, value)
     end
-    # rubocop:enable Metrics/MethodLength
+
+    Command = Struct.new(:direction, :value)
   end
 
   class PointFerry
@@ -49,7 +60,7 @@ class RainRisk
     end
 
     def move_forward(value)
-      @coordinates += INCREMENTS_BY_DIRECTION[orientation].call(value)
+      move_to_direction(orientation, value)
     end
 
     def move_to_direction(direction, value)
@@ -113,8 +124,8 @@ class RainRisk
       Coordinates.new(x + other.x, y + other.y)
     end
 
-    def *(value)
-      Coordinates.new(x * value, y * value)
+    def *(other)
+      Coordinates.new(x * other, y * other)
     end
   end
 
