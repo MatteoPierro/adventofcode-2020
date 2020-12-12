@@ -25,3 +25,4 @@ Check code style
 - [Day 9: Encoding Error](./lib/encoding_error.rb)
 - [Day 10: Adapter Array](./lib/adapter_array.rb)
 - [Day 11: Seating System](./lib/seating_system.rb)
+- [Day 12: Rain Risk](./lib/rain_risk.rb)
