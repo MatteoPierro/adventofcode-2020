@@ -5,67 +5,87 @@ require_relative 'file_helper'
 # Solution for https://adventofcode.com/2020/day/12
 
 class RainRisk
-  def self.manhattan_distance(commands, ferry: Ferry.new)
+  def self.manhattan_distance(commands, ferry: PointFerry.new)
     commands.each { |command| ferry.execute(command) }
     ferry.coordinates.x.abs + ferry.coordinates.y.abs
   end
 
-  class Ferry
-    COMMAND_PATTERN = /^(?<command>\w)(?<value>\d+)$/.freeze
+  module Ferry
+    COMMAND_PATTERN = /^(?<direction>\w)(?<value>\d+)$/.freeze
 
-    attr_reader :coordinates, :orientation
+    attr_reader :coordinates
 
     def initialize
       @coordinates = Coordinates.new(0, 0)
-      @orientation = Direction::EAST
     end
 
     # rubocop:disable Metrics/MethodLength
     def execute(raw_command)
       command_match = COMMAND_PATTERN.match(raw_command)
-      command = command_match[:command]
+      direction = command_match[:direction]
       value = command_match[:value].to_i
-      case command
+      case direction
       when 'F'
-        @coordinates += INCREMENTS_BY_DIRECTION[orientation].call(value)
+        move_forward(value)
       when 'R'
-        @orientation = Direction.rotate(orientation, value)
+        rotate(value)
       when 'L'
-        @orientation = Direction.rotate(orientation, -value)
+        rotate(-value)
       else
-        @coordinates += INCREMENTS_BY_DIRECTION[command].call(value)
+        move_to_direction(direction, value)
       end
     end
     # rubocop:enable Metrics/MethodLength
   end
 
-  class WaypointFerry
-    COMMAND_PATTERN = /^(?<command>\w)(?<value>\d+)$/.freeze
+  class PointFerry
+    include Ferry
 
-    attr_reader :coordinates, :waypoint
+    attr_reader :orientation
 
     def initialize
-      @coordinates = Coordinates.new(0, 0)
+      super
+      @orientation = Directions::EAST
+    end
+
+    def move_forward(value)
+      @coordinates += INCREMENTS_BY_DIRECTION[orientation].call(value)
+    end
+
+    def move_to_direction(direction, value)
+      @coordinates += INCREMENTS_BY_DIRECTION[direction].call(value)
+    end
+
+    def rotate(value)
+      @orientation = Directions.rotate(orientation, value)
+    end
+  end
+
+  class WaypointFerry
+    include Ferry
+
+    attr_reader :waypoint
+
+    def initialize
+      super
       @waypoint = Coordinates.new(10, 1)
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    def execute(raw_command)
-      command_match = COMMAND_PATTERN.match(raw_command)
-      command = command_match[:command]
-      value = command_match[:value].to_i
-      case command
-      when 'F'
-        @coordinates += waypoint * value
-      when 'R'
-        @waypoint = ROTATION[value].call(waypoint)
-      when 'L'
-        @waypoint = ROTATION[360 - value].call(waypoint)
-      else
-        @waypoint += INCREMENTS_BY_DIRECTION[command].call(value)
-      end
+    def move_forward(value)
+      @coordinates += waypoint * value
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+
+    def move_to_direction(direction, value)
+      @waypoint += INCREMENTS_BY_DIRECTION[direction].call(value)
+    end
+
+    def rotate(value)
+      @waypoint = if value.negative?
+                    ROTATION[360 + value].call(waypoint)
+                  else
+                    ROTATION[value].call(waypoint)
+                  end
+    end
 
     ROTATION = {
       90 => ->(coordinates) { Coordinates.new(coordinates.y, -coordinates.x) },
@@ -74,7 +94,7 @@ class RainRisk
     }.freeze
   end
 
-  module Direction
+  module Directions
     EAST = 'E'
     WEST = 'W'
     NORTH = 'N'
@@ -93,15 +113,15 @@ class RainRisk
       Coordinates.new(x + other.x, y + other.y)
     end
 
-    def *(other)
-      Coordinates.new(x * other, y * other)
+    def *(value)
+      Coordinates.new(x * value, y * value)
     end
   end
 
   INCREMENTS_BY_DIRECTION = {
-    Direction::NORTH => ->(value) { Coordinates.new(0, value) },
-    Direction::SOUTH => ->(value) { Coordinates.new(0, -value) },
-    Direction::WEST => ->(value) { Coordinates.new(-value, 0) },
-    Direction::EAST => ->(value) { Coordinates.new(value, 0) }
+    Directions::NORTH => ->(value) { Coordinates.new(0, value) },
+    Directions::SOUTH => ->(value) { Coordinates.new(0, -value) },
+    Directions::WEST => ->(value) { Coordinates.new(-value, 0) },
+    Directions::EAST => ->(value) { Coordinates.new(value, 0) }
   }.freeze
 end
