@@ -45,4 +45,38 @@ class RainRiskTest < Minitest::Test
     commands = File.readlines('./lib/rain_risk.txt')
     assert_equal(759, RainRisk.manhattan_distance(commands))
   end
+
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def test_waypoint_ferry
+    ferry = RainRisk::WaypointFerry.new
+
+    ferry.execute('F10')
+    assert_equal(RainRisk::Position.new(100, 10), ferry.position)
+    assert_equal(RainRisk::Position.new(10, 1), ferry.waypoint)
+
+    ferry.execute('N3')
+    assert_equal(RainRisk::Position.new(100, 10), ferry.position)
+    assert_equal(RainRisk::Position.new(10, 4), ferry.waypoint)
+
+    ferry.execute('F7')
+    assert_equal(RainRisk::Position.new(170, 38), ferry.position)
+    assert_equal(RainRisk::Position.new(10, 4), ferry.waypoint)
+
+    ferry.execute('R90')
+    assert_equal(RainRisk::Position.new(170, 38), ferry.position)
+    assert_equal(RainRisk::Position.new(4, -10), ferry.waypoint)
+
+    ferry.execute('F11')
+    assert_equal(RainRisk::Position.new(214, -72), ferry.position)
+    assert_equal(RainRisk::Position.new(4, -10), ferry.waypoint)
+
+    commands = %w[F10 N3 F7 R90 F11]
+    assert_equal(286, RainRisk.manhattan_distance(commands, ferry: RainRisk::WaypointFerry.new))
+  end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+
+  def test_second_puzzle
+    commands = File.readlines('./lib/rain_risk.txt')
+    assert_equal(45_763, RainRisk.manhattan_distance(commands, ferry: RainRisk::WaypointFerry.new))
+  end
 end
