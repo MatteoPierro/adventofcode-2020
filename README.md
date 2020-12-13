@@ -26,3 +26,4 @@ Check code style
 - [Day 10: Adapter Array](./lib/adapter_array.rb)
 - [Day 11: Seating System](./lib/seating_system.rb)
 - [Day 12: Rain Risk](./lib/rain_risk.rb)
+- [Day 13: Shuttle Search](./lib/shuttle_search.rb)
