@@ -20,14 +20,12 @@ class ShuttleSearch
   end
 
   def self.find_consecutive_time(raw_busses)
-    busses = busses_sorted_by_number(raw_busses)
-    maximum_time = busses.map(&:number).reduce(&:*)
-    (highest, *remaining) = busses
-    pace = highest.number
-    current_time = maximum_time - highest.position
+    busses = busses_from(raw_busses)
+    pace = 1
+    current_time = 0
 
-    remaining.each do |current_bus|
-      current_time -= pace until current_bus.correct_position?(current_time)
+    busses.each do |current_bus|
+      current_time += pace until current_bus.correct_position?(current_time)
 
       pace *= current_bus.number
     end
@@ -42,12 +40,11 @@ class ShuttleSearch
     end
   end
 
-  def self.busses_sorted_by_number(raw_busses)
+  def self.busses_from(raw_busses)
     raw_busses
       .map.with_index
       .reject { |s, _| s == 'x' }
       .map { |number, position| Bus.new(number.to_i, position) }
-      .sort { |b1, b2| b2.number <=> b1.number }
       .to_a
   end
 end

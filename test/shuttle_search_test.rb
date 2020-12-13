@@ -22,6 +22,7 @@ class ShuttleSearchTest < Minitest::Test
   def test_find_consecutive_time
     assert_equal(754_018, ShuttleSearch.find_consecutive_time(%w[67 7 59 61]))
     assert_equal(779_210, ShuttleSearch.find_consecutive_time(%w[67 x 7 59 61]))
+    assert_equal(779_210, ShuttleSearch.find_consecutive_time(%w[67 x 7 59 61]))
     assert_equal(1_068_781, ShuttleSearch.find_consecutive_time(%w[7 13 x x 59 x 31 19]))
   end
 
