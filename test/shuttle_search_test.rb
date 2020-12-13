@@ -6,7 +6,7 @@ require_relative '../lib/shuttle_search'
 class ShuttleSearchTest < Minitest::Test
   def test_find_departure
     time = 939
-    buses = [7, 13, 59, 31, 19]
+    buses = ShuttleSearch.busses_from('7,13,59,31,19')
     departure = ShuttleSearch.find_departure(time, buses)
     assert_equal(ShuttleSearch::Departure.new(59, 944), departure)
   end
@@ -20,14 +20,14 @@ class ShuttleSearchTest < Minitest::Test
   end
 
   def test_find_consecutive_time
-    assert_equal(754_018, ShuttleSearch.find_consecutive_time(%w[67 7 59 61]))
-    assert_equal(779_210, ShuttleSearch.find_consecutive_time(%w[67 x 7 59 61]))
-    assert_equal(779_210, ShuttleSearch.find_consecutive_time(%w[67 x 7 59 61]))
-    assert_equal(1_068_781, ShuttleSearch.find_consecutive_time(%w[7 13 x x 59 x 31 19]))
+    assert_equal(754_018, ShuttleSearch.find_consecutive_time('67,7,59,61'))
+    assert_equal(779_210, ShuttleSearch.find_consecutive_time('67,x,7,59,61'))
+    assert_equal(779_210, ShuttleSearch.find_consecutive_time('67,x,7,59,61'))
+    assert_equal(1_068_781, ShuttleSearch.find_consecutive_time('7,13,x,x,59,x,31,19'))
   end
 
   def test_second_puzzle
-    raw_busses = File.readlines('./lib/shuttle_search.txt')[1].split(',')
+    raw_busses = File.readlines('./lib/shuttle_search.txt')[1]
     assert_equal(487_905_974_205_117, ShuttleSearch.find_consecutive_time(raw_busses))
   end
 end

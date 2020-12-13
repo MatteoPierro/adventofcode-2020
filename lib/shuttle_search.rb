@@ -8,14 +8,14 @@ class ShuttleSearch
   def self.minutes_to_wait(file_path = './lib/shuttle_search.txt')
     lines = File.readlines(file_path)
     time = lines[0].to_i
-    busses = lines[1].split(',').reject { |s| s == 'x' }.map(&:to_i)
+    busses = busses_from(lines[1])
     departure = find_departure(time, busses)
     departure.bus * (departure.time - time)
   end
 
   def self.find_departure(time, busses)
     busses
-      .map { |bus| Departure.new(bus, time + bus - time % bus) }
+      .map { |bus| Departure.new(bus.number, time + bus.number - time % bus.number) }
       .min { |b1, b2| b1.time <=> b2.time }
   end
 
@@ -42,6 +42,7 @@ class ShuttleSearch
 
   def self.busses_from(raw_busses)
     raw_busses
+      .split(',')
       .map.with_index
       .reject { |s, _| s == 'x' }
       .map { |number, position| Bus.new(number.to_i, position) }
