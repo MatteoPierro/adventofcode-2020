@@ -34,6 +34,6 @@ class DockingDataTest < Minitest::Test
     docking_data = DockingData.new(DockingData::MemoryAddressDecoder.new)
     instructions = File.readlines('./lib/docking_data.txt')
     instructions.each { |instruction| docking_data.execute_instruction(instruction) }
-    assert_equal(2741969047858, docking_data.memory_values_sum)
+    assert_equal(2_741_969_047_858, docking_data.memory_values_sum)
   end
 end

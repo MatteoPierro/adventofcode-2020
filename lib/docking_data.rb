@@ -54,27 +54,27 @@ class DockingData
   end
 
   class MemoryAddressDecoder < Decoder
-
     def execute_change_value(memory, address, value)
       padded_address = padded_binary(address)
       floating_address = floating_address(padded_address)
-
-      floating_bits_product(floating_address)
-        .map do |bits|
-        address = floating_address.join
-        bits.each do |bit|
-          address.sub!('X', bit.to_s)
-        end
-        address
-      end
-        .map { |a| a.to_i(2) }
-        .each { |a| memory[a] = value }
+      addresses_for(floating_address).each { |a| memory[a] = value }
     end
 
     private
 
+    def addresses_for(floating_address)
+      floating_bits_product(floating_address)
+        .map { |bits| address_for(bits, floating_address) }
+    end
+
+    def address_for(bits, floating_address)
+      address = floating_address.join
+      bits.each { |bit| address.sub!('X', bit.to_s) }
+      address.to_i(2)
+    end
+
     def floating_bits_product(floating_address)
-      return [] if floating_address.count('X') == 0
+      return [] if floating_address.count('X').zero?
 
       acc = [0, 1]
 
@@ -82,7 +82,7 @@ class DockingData
         acc = acc.product([0, 1])
       end
 
-      acc.map { |v| v.flatten }
+      acc.map(&:flatten)
     end
 
     def floating_address(address)
