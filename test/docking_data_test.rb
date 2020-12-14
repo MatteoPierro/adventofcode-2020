@@ -20,4 +20,20 @@ class DockingDataTest < Minitest::Test
     instructions.each { |instruction| docking_data.execute_instruction(instruction) }
     assert_equal(12_135_523_360_904, docking_data.memory_values_sum)
   end
+
+  def test_execute_instruction_with_memory_address_decoder
+    docking_data = DockingData.new(DockingData::MemoryAddressDecoder.new)
+    docking_data.execute_instruction('mask = 000000000000000000000000000000X1001X')
+    docking_data.execute_instruction('mem[42] = 100')
+    docking_data.execute_instruction('mask = 00000000000000000000000000000000X0XX')
+    docking_data.execute_instruction('mem[26] = 1')
+    assert_equal(208, docking_data.memory_values_sum)
+  end
+
+  def test_second_puzzle
+    docking_data = DockingData.new(DockingData::MemoryAddressDecoder.new)
+    instructions = File.readlines('./lib/docking_data.txt')
+    instructions.each { |instruction| docking_data.execute_instruction(instruction) }
+    assert_equal(2741969047858, docking_data.memory_values_sum)
+  end
 end

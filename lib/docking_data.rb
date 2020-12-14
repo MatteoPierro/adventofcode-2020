@@ -32,8 +32,7 @@ class DockingData
     end
 
     def execute_change_value(memory, address, value)
-      binary_value = value.to_s(2)
-      binary_value = '0' * (mask.length - binary_value.length) + binary_value
+      binary_value = padded_binary(value)
       binary_corrected_value = correct_value(binary_value)
       memory[address] = binary_corrected_value.join.to_i(2)
     end
@@ -42,6 +41,54 @@ class DockingData
       mask.map.with_index do |mask_value, index|
         if mask_value == 'X'
           binary_value[index]
+        else
+          mask_value
+        end
+      end
+    end
+
+    def padded_binary(value)
+      binary_value = value.to_s(2)
+      '0' * (mask.length - binary_value.length) + binary_value
+    end
+  end
+
+  class MemoryAddressDecoder < Decoder
+
+    def execute_change_value(memory, address, value)
+      padded_address = padded_binary(address)
+      floating_address = floating_address(padded_address)
+
+      floating_bits_product(floating_address)
+        .map do |bits|
+        address = floating_address.join
+        bits.each do |bit|
+          address.sub!('X', bit.to_s)
+        end
+        address
+      end
+        .map { |a| a.to_i(2) }
+        .each { |a| memory[a] = value }
+    end
+
+    private
+
+    def floating_bits_product(floating_address)
+      return [] if floating_address.count('X') == 0
+
+      acc = [0, 1]
+
+      (1...floating_address.count('X')).each do |_|
+        acc = acc.product([0, 1])
+      end
+
+      acc.map { |v| v.flatten }
+    end
+
+    def floating_address(address)
+      mask.map.with_index do |mask_value, index|
+        if mask_value == '0'
+          address[index]
         else
           mask_value
         end
