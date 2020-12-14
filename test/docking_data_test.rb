@@ -31,6 +31,7 @@ class DockingDataTest < Minitest::Test
   end
 
   def test_second_puzzle
+    skip # Quite slow. Enable it only when needed
     docking_data = DockingData.new(DockingData::MemoryAddressDecoder.new)
     instructions = File.readlines('./lib/docking_data.txt')
     instructions.each { |instruction| docking_data.execute_instruction(instruction) }
