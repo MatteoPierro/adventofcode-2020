@@ -28,3 +28,4 @@ Check code style
 - [Day 12: Rain Risk](./lib/rain_risk.rb)
 - [Day 13: Shuttle Search](./lib/shuttle_search.rb)
 - [Day 14: Docking Data](./lib/docking_data.rb)
+- [Day 15: Rambunctious Recitation](./lib/rambunctious_recitation.rb)
