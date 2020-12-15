@@ -5,10 +5,10 @@ require_relative 'file_helper'
 # Solution for https://adventofcode.com/2020/day/15
 
 class RambunctiousRecitation
-  def self.number_2020th(initial_sequence)
+  def self.number_at_iteration(initial_sequence, iteration = 2020)
     rambunctious_recitation = RambunctiousRecitation.new(initial_sequence)
 
-    (1...2020).each { |_| rambunctious_recitation.number }
+    (1...iteration).each { |_| rambunctious_recitation.number }
 
     rambunctious_recitation.number
   end
