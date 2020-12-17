@@ -7,18 +7,20 @@ require 'set'
 
 class ConwayCubes
   class << self
-    def from_file(file_path)
+    def from_file(file_path, dimension = 3)
       lines = File.readlines(file_path)
-      ConwayCubes.new(parse_lines(lines))
+      ConwayCubes.new(parse_lines(lines, dimension))
     end
 
     private
 
-    def parse_lines(lines)
+    def parse_lines(lines, dimension)
       lines.flat_map.with_index do |line, y|
         line.chars.map.with_index do |value, x|
           if value == '.'
             nil
+          elsif dimension == 4
+            [x, y, 0, 0]
           else
             [x, y, 0]
           end
