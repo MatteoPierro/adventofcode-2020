@@ -30,3 +30,4 @@ Check code style
 - [Day 14: Docking Data](./lib/docking_data.rb)
 - [Day 15: Rambunctious Recitation](./lib/rambunctious_recitation.rb)
 - [Day 16: Ticket Translation](./lib/ticket_translation.rb)
+- [Day 17: Conway Cubes](./lib/conway_cubes.rb)
