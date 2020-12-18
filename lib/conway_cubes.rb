@@ -14,6 +14,7 @@ class ConwayCubes
 
     private
 
+    # rubocop:disable Metrics/MethodLength
     def parse_lines(lines, dimension)
       lines.flat_map.with_index do |line, y|
         line.chars.map.with_index do |value, x|
@@ -27,6 +28,7 @@ class ConwayCubes
         end
       end.compact.to_a
     end
+    # rubocop:enable Metrics/MethodLength
   end
 
   attr_reader :active_cubes, :delta
