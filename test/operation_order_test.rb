@@ -10,8 +10,7 @@ class OperationOrderTest < Minitest::Test
     expression = '1 + (2 * 3) + (4 * (5 + 6))'
     expression_without_brackets = operation_order.solve_brackets(expression)
     assert_equal('1 + 6 + 44', expression_without_brackets)
-    solution = operation_order.solve_simple_expression(expression_without_brackets)
-    assert_equal(51, solution)
+    assert_equal(51, operation_order.solve(expression))
   end
 
   def test_expression_starting_with_brackets
