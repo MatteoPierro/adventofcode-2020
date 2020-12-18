@@ -22,4 +22,17 @@ class OperationOrderTest < Minitest::Test
   def test_first_puzzle
     assert_equal(24_650_385_570_008, OperationOrder.solve_expressions('./lib/operation_order.txt'))
   end
+
+  def test_advanced_math
+    math = OperationOrder::AdvancedMath.new
+    assert_equal('3 * 7 * 11', math.execute_sums('1 + 2 * 3 + 4 * 5 + 6'))
+    assert_equal('231', math.execute_multiplications('3 * 7 * 11'))
+  end
+
+  def test_second_puzzle
+    assert_equal(158_183_007_916_215, OperationOrder.solve_expressions(
+                                        './lib/operation_order.txt',
+                                        OperationOrder::AdvancedMath.new
+                                      ))
+  end
 end

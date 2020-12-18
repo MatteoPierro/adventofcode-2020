@@ -5,8 +5,8 @@ require_relative 'file_helper'
 # Solution for https://adventofcode.com/2020/day/18
 
 class OperationOrder
-  def self.solve_expressions(expressions_path)
-    operation_order = OperationOrder.new
+  def self.solve_expressions(expressions_path, math = Math.new)
+    operation_order = OperationOrder.new(math)
 
     File.readlines(expressions_path)
         .map { |expression| operation_order.solve(expression) }
@@ -46,6 +46,8 @@ class OperationOrder
       solve_simple_expression(new_expression)
     end
 
+    protected
+
     def execute_operation(operation, first, second)
       case operation
       when '*'
@@ -53,6 +55,33 @@ class OperationOrder
       when '+'
         first.to_i + second.to_i
       end
+    end
+  end
+
+  class AdvancedMath < Math
+    def solve_simple_expression(expression)
+      execute_multiplications(execute_sums(expression)).to_i
+    end
+
+    def execute_sums(expression)
+      execute_operations(expression, '+')
+    end
+
+    def execute_multiplications(expression)
+      execute_operations(expression, '*')
+    end
+
+    private
+
+    def execute_operations(expression, operation)
+      return expression unless expression.include?(operation)
+
+      operation_regexp = /(\d+) (#{Regexp.quote(operation)}) (\d+)/
+      new_expression = expression.gsub(operation_regexp) do |_|
+        execute_operation(Regexp.last_match(2), Regexp.last_match(1), Regexp.last_match(3))
+      end
+
+      execute_operations(new_expression, operation)
     end
   end
 end
