@@ -32,3 +32,4 @@ Check code style
 - [Day 16: Ticket Translation](./lib/ticket_translation.rb)
 - [Day 17: Conway Cubes](./lib/conway_cubes.rb)
 - [Day 18: Operation Order](./lib/operation_order.rb)
+- [Day 19: Monster Messages](./lib/monster_messages.rb)

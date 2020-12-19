@@ -60,8 +60,10 @@ class MonsterMessages
     "(#{new_rule})"
   end
 
+  MAX_REPETITIONS = 4
+
   def rule_eleven_with_repetitions
-    (1..4).each.map do |rep|
+    (1..MAX_REPETITIONS).each.map do |rep|
       "(#{repetitions('(42)', rep)} #{repetitions('(31)', rep)})"
     end.join('|')
   end
