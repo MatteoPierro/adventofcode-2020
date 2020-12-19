@@ -40,45 +40,33 @@ class MonsterMessages
 
   def introduce_loops
     rules['8'] = '((42)+)'
-    rules['11'] = '(?<forty_two>((42)+))(?<thirty_one>((31)+))'
+    rules['11'] = "(#{rule_eleven_with_repetitions})"
     reduce_rule_zero
-  end
-
-  def count_valid_messages_with_loops
-    reduced_42 = reduce_rule(rules['42'])
-    reduced_31 = reduce_rule(rules['31'])
-    valid_messages = messages.select do |message|
-      match = message.match(/^#{rule_zero}$/)
-
-      if match.nil?
-        false
-      else
-        forty_two_size = match[:forty_two].scan(/^#{reduced_42}$/).size
-        thirty_one_size = match[:thirty_one].scan(/^#{reduced_31}$/).size
-        # if forty_two_size != thirty_one_size
-        #   p "message #{message}"
-        #   p "42 match #{match[:forty_two]} size #{forty_two_size}"
-        #   p "31 match #{match[:thirty_one]} size #{thirty_one_size}"
-        #   p "\n"
-        # end
-
-        forty_two_size <= thirty_one_size
-      end
-    end
-
-    valid_messages.count
   end
 
   def reduce_rule(rule)
     return rule.delete(' ') unless rule.match?(/\d/)
 
-    reduced_rule = rule.gsub(/(\d+)/) do |_|
-      sub_rule = rules[Regexp.last_match(1)]
-      new_rule = sub_rule.gsub(/^(.*) \| (.*)$/) do |_|
-        "(#{Regexp.last_match(1)}|#{Regexp.last_match(2)})"
-      end
-      "(#{new_rule})"
-    end
+    reduced_rule = rule.gsub(/(\d+)/) { |_| replace_rule(Regexp.last_match(1)) }
     reduce_rule(reduced_rule)
+  end
+
+  private
+
+  def replace_rule(rule)
+    new_rule = rules[rule].gsub(/^(.*) \| (.*)$/) do |_|
+      "(#{Regexp.last_match(1)}|#{Regexp.last_match(2)})"
+    end
+    "(#{new_rule})"
+  end
+
+  def rule_eleven_with_repetitions
+    (1..4).each.map do |rep|
+      "(#{repetitions('(42)', rep)} #{repetitions('(31)', rep)})"
+    end.join('|')
+  end
+
+  def repetitions(string, number)
+    (0...number).each.map { |_| string }.join(' ')
   end
 end
