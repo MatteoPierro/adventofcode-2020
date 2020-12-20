@@ -33,3 +33,4 @@ Check code style
 - [Day 17: Conway Cubes](./lib/conway_cubes.rb)
 - [Day 18: Operation Order](./lib/operation_order.rb)
 - [Day 19: Monster Messages](./lib/monster_messages.rb)
+- [Day 20: Jurassic Jigsaw](./test/jurassic_jigsaw_test.rb)
