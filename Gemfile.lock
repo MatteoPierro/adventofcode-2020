@@ -3,6 +3,7 @@ GEM
   specs:
     ast (2.4.1)
     minitest (5.14.2)
+    numo-narray (0.9.1.9)
     parallel (1.20.1)
     parser (2.7.2.0)
       ast (~> 2.4.1)
@@ -29,6 +30,7 @@ PLATFORMS
 
 DEPENDENCIES
   minitest (~> 5.0)
+  numo-narray (~> 0.9.1.9)
   rake (~> 12.0)
   rubocop
 
