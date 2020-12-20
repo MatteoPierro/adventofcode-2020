@@ -30,74 +30,24 @@ class JurassicJigsawTest < Minitest::Test
 
     tiles_by_id = blocks.each.with_object({}) do |block, acc|
       id = block[0].match(/^Tile (\d+):$/)[1].to_i
-      acc[id] = Tile.new(block[1..-1])
+      acc[id] = Tile.new(id, block[1..-1])
     end
 
-    matches_by_tile_id = find_matches(tiles_by_id)
-    borders = matches_by_tile_id.select { |_, v| v.values.select(&:nil?).count == 2 }
+    current_tile = tile_top_left(tiles_by_id)
 
-    first_border = borders.first
-    id = first_border.first
-    adjacent = first_border.last
-    first_tile = tiles_by_id[id]
-    if adjacent[:bottom].nil?
-      first_tile.flipud!
-    end
-    if adjacent[:right].nil?
-      first_tile.fliplr!
-    end
+    rows = [align_row(current_tile, tiles_by_id), *align_remaining_rows(current_tile, tiles_by_id)]
 
-    puts "\n\n first row \n\n"
-    current_border_id = id
-    current_border = first_tile
-    puts current_border_id
-    puts first_tile.to_s
-
-    row = build_row(current_border, current_border_id, tiles_by_id)
-
-    row_id = 2
-    loop do
-      puts "\n\n building #{row_id} row \n\n"
-      row_id += 1
-      bottom_border = current_border.bottom_border
-      puts "bottom border #{bottom_border.to_a}"
-      other_tiles_by_id = tiles_by_id.reject { |i, _| i == current_border_id }
-      match = find_match(bottom_border, other_tiles_by_id)
-      break if match.nil?
-      other_tile = tiles_by_id[match[:other_tile]]
-      puts "match #{match}"
-      if match[:flipped]
-        if match[:other_position] == :bottom
-          other_tile.rot90!(2)
-        elsif match[:other_position] == :right
-          other_tile.rot90!
-          other_tile.fliplr!
-        elsif match[:other_position] == :left
-          other_tile.rot90!(-1)
-        else
-          other_tile.fliplr!
-        end
-      else
-        if match[:other_position] == :bottom
-          other_tile.flipud!
-        elsif match[:other_position] == :right
-          other_tile.rot90!
-        elsif match[:other_position] == :left
-          other_tile.rot90!(-1)
-          other_tile.fliplr!
-        end
+    rows.each_with_index do |row, index|
+      puts "row #{index + 1} \n\n"
+      row.each do |tile_id|
+        puts tile_id
+        puts tiles_by_id[tile_id].to_s
+        puts "\n"
       end
-
-      puts match[:other_tile]
-      puts other_tile.to_s
-      row = build_row(other_tile, match[:other_tile], tiles_by_id)
-      current_border_id = match[:other_tile]
-      current_border = other_tile
+      puts "\n\n\n"
     end
 
-    assert_equal('', row)
-    puts first_tile.to_s
-    assert_equal(1951, id)
+    assert_equal([[1951, 2311, 3079], [2729, 1427, 2473], [2971, 1489, 1171]], rows)
   end
 
   def find_matches(tiles_by_id)
@@ -135,11 +85,11 @@ class JurassicJigsawTest < Minitest::Test
     nil
   end
 
-  def build_row(current_border, current_border_id, tiles_by_id)
-    row = [current_border_id]
+  def align_row(current_border, tiles_by_id)
+    row = [current_border.id]
     loop do
       left_border = current_border.right_border
-      other_tiles_by_id = tiles_by_id.reject { |i, _| i == current_border_id }
+      other_tiles_by_id = tiles_by_id.reject { |i, _| i == current_border.id }
       match = find_match(left_border, other_tiles_by_id)
       break if match.nil?
       other_tile = tiles_by_id[match[:other_tile]]
@@ -165,20 +115,34 @@ class JurassicJigsawTest < Minitest::Test
         end
       end
       current_border = other_tile
-      current_border_id = match[:other_tile]
-      row << current_border_id
-      puts match[:other_tile]
-      puts other_tile.to_s
+      row << current_border.id
     end
     row
+  end
+
+  def tile_top_left(tiles_by_id)
+    matches_by_tile_id = find_matches(tiles_by_id)
+    border_tiles = matches_by_tile_id.select { |_, v| v.values.select(&:nil?).count == 2 }
+    first_border = border_tiles.first
+    id = first_border.first
+    adjacent = first_border.last
+    first_tile = tiles_by_id[id]
+    if adjacent[:bottom].nil?
+      first_tile.flipud!
+    end
+    if adjacent[:right].nil?
+      first_tile.fliplr!
+    end
+    first_tile
   end
 
   class Tile
     include Numo
 
-    attr_reader :borders_by_position, :tile
+    attr_reader :borders_by_position, :tile, :id
 
-    def initialize(raw_tile)
+    def initialize(id, raw_tile)
+      @id = id
       @tile = Int32[*raw_tile.map do |row|
         row.chars.map do |pixel|
           if pixel == '.'
@@ -241,5 +205,42 @@ class JurassicJigsawTest < Minitest::Test
         right: @tile[true, -1]
       }
     end
+  end
+
+  private
+
+  def align_remaining_rows(current_tile, tiles_by_id)
+    rows = []
+    loop do
+      bottom_border = current_tile.bottom_border
+      other_tiles_by_id = tiles_by_id.reject { |i, _| i == current_tile.id }
+      match = find_match(bottom_border, other_tiles_by_id)
+      break if match.nil?
+      other_tile = tiles_by_id[match[:other_tile]]
+      if match[:flipped]
+        if match[:other_position] == :bottom
+          other_tile.rot90!(2)
+        elsif match[:other_position] == :right
+          other_tile.rot90!
+          other_tile.fliplr!
+        elsif match[:other_position] == :left
+          other_tile.rot90!(-1)
+        else
+          other_tile.fliplr!
+        end
+      else
+        if match[:other_position] == :bottom
+          other_tile.flipud!
+        elsif match[:other_position] == :right
+          other_tile.rot90!
+        elsif match[:other_position] == :left
+          other_tile.rot90!(-1)
+          other_tile.fliplr!
+        end
+      end
+      rows << align_row(other_tile, tiles_by_id)
+      current_tile = other_tile
+    end
+    rows
   end
 end
