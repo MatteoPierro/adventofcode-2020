@@ -26,8 +26,21 @@ class JurassicJigsawTest < Minitest::Test
     picture = build_picture(blocks)
     number_of_monochrome_pixels = picture.to_a.join.count('1')
 
+    # One of these manipulations should give a number of monsters not zero
+    # picture = picture
+    # picture = picture.rot90(1)
+    # picture = picture.rot90(2)
+    # picture = picture.rot90(-1)
+    # picture = picture.fliplr
+    # picture = picture.fliplr.rot90(1)
+    # picture = picture.fliplr.rot90(2)
+    # picture = picture.fliplr.rot90(-1)
+    # picture = picture.flipud
+    # picture = picture.flipud.rot90(1)
+    # picture = picture.flipud.rot90(2)
     picture = picture.flipud.rot90(-1)
     number_of_monsters = find_number_of_monsters(picture)
+    assert(number_of_monsters != 0)
 
     assert_equal(2231, number_of_monochrome_pixels - RELATIVE_MONSTER_COORDINATES.length * number_of_monsters)
   end
