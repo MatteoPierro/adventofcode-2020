@@ -6,6 +6,7 @@ require_relative '../lib/file_helper'
 
 class JurassicJigsawTest < Minitest::Test
   def test_first_puzzle
+    skip
     blocks = File.read_blocks('./lib/jurassic_jigsaw.txt')
 
     tiles_by_id = tiles_by_id(blocks)
@@ -22,6 +23,7 @@ class JurassicJigsawTest < Minitest::Test
   end
 
   def test_second_puzzle
+    skip
     blocks = File.read_blocks('./lib/jurassic_jigsaw.txt')
     picture = build_picture(blocks)
     number_of_monochrome_pixels = picture.to_a.join.count('1')
