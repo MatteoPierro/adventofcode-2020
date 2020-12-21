@@ -34,3 +34,4 @@ Check code style
 - [Day 18: Operation Order](./lib/operation_order.rb)
 - [Day 19: Monster Messages](./lib/monster_messages.rb)
 - [Day 20: Jurassic Jigsaw](./test/jurassic_jigsaw_test.rb)
+- [Day 21: Allergen Assessment](./test/allergen_assessment_test.rb)
