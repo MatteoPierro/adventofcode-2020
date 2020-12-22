@@ -35,3 +35,4 @@ Check code style
 - [Day 19: Monster Messages](./lib/monster_messages.rb)
 - [Day 20: Jurassic Jigsaw](./test/jurassic_jigsaw_test.rb)
 - [Day 21: Allergen Assessment](./test/allergen_assessment_test.rb)
+- [Day 22: Crab Combat](./test/crab_combat_test.rb)
