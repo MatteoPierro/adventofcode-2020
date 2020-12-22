@@ -4,28 +4,24 @@ require 'minitest/autorun'
 require_relative '../lib/file_helper'
 
 class CrabCombatTest < Minitest::Test
-
-  def test_winning_player_score
-    crab_combat = CrabCombat.new([9, 2, 6, 3, 1], [5, 8, 4, 7, 10])
-
-    crab_combat.play_round
-
-    assert_equal([2, 6, 3, 1, 9, 5], crab_combat.first_player_cards)
-    assert_equal([8, 4, 7, 10], crab_combat.second_player_cards)
-
-    crab_combat.play_round
-
-    assert_equal([6, 3, 1, 9, 5], crab_combat.first_player_cards)
-    assert_equal([4, 7, 10, 8, 2], crab_combat.second_player_cards)
+  def test_first_puzzle
+    crab_combat = CrabCombat.from_file('./lib/crab_combat.txt')
 
     crab_combat.play_game
 
-    assert_equal([], crab_combat.first_player_cards)
-    assert_equal([3, 2, 10, 6, 8, 5, 9, 4, 7, 1], crab_combat.second_player_cards)
-    assert_equal(306, crab_combat.winning_player_score)
+    assert_equal(33_421, crab_combat.winning_player_score)
   end
 
   class CrabCombat
+    class << self
+      def from_file(file_path)
+        blocks = File.read_blocks(file_path)
+        first_player_cards = blocks[0][1..].map(&:to_i).to_a
+        second_player_cards = blocks[1][1..].map(&:to_i).to_a
+        new(first_player_cards, second_player_cards)
+      end
+    end
+
     attr_reader :first_player_cards, :second_player_cards
 
     def initialize(first_player_cards, second_player_cards)
@@ -41,6 +37,7 @@ class CrabCombatTest < Minitest::Test
     def play_game
       loop do
         return if first_player_cards.empty? || second_player_cards.empty?
+
         play_round
       end
     end
