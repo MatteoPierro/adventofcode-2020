@@ -2,6 +2,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'test/jurassic_jigsaw_test.rb'
+    - 'test/crab_combat_test.rb'
 
 Documentation:
   Enabled: false
