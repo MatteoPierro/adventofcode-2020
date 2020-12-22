@@ -20,16 +20,13 @@ class CrabCombatTest < Minitest::Test
     assert_equal(:first_player, recursive_crab_combat.winner)
   end
 
-  def test_calculation
+  def test_second_puzzle
+    skip
     recursive_crab_combat = RecursiveCrabCombat.from_file('./lib/crab_combat.txt')
-    # recursive_crab_combat = RecursiveCrabCombat.from_file('./test/crab_combat_test.txt')
 
     recursive_crab_combat.play_game
 
-    # assert_equal(:second_player, recursive_crab_combat.winner)
-    # assert_equal([], recursive_crab_combat.first_player_cards)
-    # assert_equal([7, 5, 6, 2, 4, 1, 10, 8, 9, 3], recursive_crab_combat.second_player_cards)
-    assert_equal(291, recursive_crab_combat.winning_player_score)
+    assert_equal(33651, recursive_crab_combat.winning_player_score)
   end
 
 
@@ -48,7 +45,7 @@ class CrabCombatTest < Minitest::Test
     def initialize(first_player_cards, second_player_cards)
       @first_player_cards = first_player_cards
       @second_player_cards = second_player_cards
-      @previous_hands = []
+      @previous_hands = Set.new
     end
 
     def play_round
@@ -63,19 +60,17 @@ class CrabCombatTest < Minitest::Test
       second_player_card = second_player_cards.shift
 
       if first_player_cards.length >= first_player_card && second_player_cards.length >= second_player_card
-        # binding.irb
         recursive_game = RecursiveCrabCombat.new(first_player_cards[0...first_player_card], second_player_cards[0...second_player_card])
-        winner = recursive_game.play_game
-        if winner == :first_player
-          @first_player_cards += [first_player_card, second_player_card]
+        if recursive_game.play_game == :first_player
+          @first_player_cards.push(first_player_card, second_player_card)
         else
-          @second_player_cards += [second_player_card, first_player_card]
+          @second_player_cards.push(second_player_card, first_player_card)
         end
       else
         if first_player_card > second_player_card
-          @first_player_cards += [first_player_card, second_player_card]
+          @first_player_cards.push(first_player_card, second_player_card)
         else
-          @second_player_cards += [second_player_card, first_player_card]
+          @second_player_cards.push(second_player_card, first_player_card)
         end
       end
     end
@@ -84,17 +79,17 @@ class CrabCombatTest < Minitest::Test
       loop do
         if first_player_cards.empty?
           @winner = :second_player
-          return
+          return winner
         end
 
         if second_player_cards.empty?
           @winner = :first_player
-          return
+          return winner
         end
 
         play_round
 
-        return unless winner.nil?
+        return winner unless winner.nil?
       end
     end
 
