@@ -3,6 +3,8 @@ AllCops:
   Exclude:
     - 'test/jurassic_jigsaw_test.rb'
     - 'test/crab_combat_test.rb'
+    - 'test/crab_cups_test.rb'
+    - 'lib/crab_cups.rb'
 
 Documentation:
   Enabled: false
