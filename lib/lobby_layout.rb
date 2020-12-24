@@ -29,7 +29,32 @@ class LobbyLayout
     end
   end
 
+  def evolve
+    new_black_tiles = Set.new
+    black_tiles.each do |black_tile|
+      white_neighbours, black_neighbours = neighbours(black_tile)
+      new_black_tiles << black_tile if [1, 2].include?(black_neighbours.length)
+      new_neighbours_black(white_neighbours, new_black_tiles)
+    end
+    @black_tiles = new_black_tiles
+  end
+
   private
+
+  def new_neighbours_black(white_neighbours, new_black_tiles)
+    white_neighbours.each do |white_tile|
+      _, black_neighbours = neighbours(white_tile)
+      new_black_tiles << white_tile if black_neighbours.length == 2
+    end
+  end
+
+  def neighbours(tile)
+    neighbours = INCREMENTS
+                 .values
+                 .map { |increment| [tile.first + increment.first, tile.last + increment.last] }
+                 .group_by { |neighbour| black_tiles.include?(neighbour) }
+    [neighbours[false] || [], neighbours[true] || []]
+  end
 
   def tile_position_for(tile_path)
     tile_path

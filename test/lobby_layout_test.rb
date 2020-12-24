@@ -29,4 +29,15 @@ class LobbyLayoutTest < Minitest::Test
 
     assert_equal(391, lobby_layout.black_tiles.count)
   end
+
+  def test_second_puzzle
+    skip # quite slow! ~7 seconds
+    tiles_paths = File.readlines('./lib/lobby_layout.txt')
+    lobby_layout = LobbyLayout.new
+
+    tiles_paths.each { |tile_path| lobby_layout.flip(tile_path) }
+    (1..100).each { |_| lobby_layout.evolve }
+
+    assert_equal(3876, lobby_layout.black_tiles.count)
+  end
 end
