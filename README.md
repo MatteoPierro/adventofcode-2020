@@ -37,3 +37,4 @@ Check code style
 - [Day 21: Allergen Assessment](./test/allergen_assessment_test.rb)
 - [Day 22: Crab Combat](./test/crab_combat_test.rb)
 - [Day 23: Crab Cups](./lib/crab_cups.rb)
+- [Day 24: Lobby Layout](./lib/lobby_layout.rb)
