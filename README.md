@@ -38,3 +38,4 @@ Check code style
 - [Day 22: Crab Combat](./test/crab_combat_test.rb)
 - [Day 23: Crab Cups](./lib/crab_cups.rb)
 - [Day 24: Lobby Layout](./lib/lobby_layout.rb)
+- [Day 25: Combo Breaker](./lib/combo_breaker.rb)
